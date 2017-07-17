@@ -1,6 +1,6 @@
 package cat.gencat.springbootdemo.domain.util;
 
-import java.sql.Types;
+import java.sql.Types; 
 
 import org.hibernate.dialect.H2Dialect;
 
