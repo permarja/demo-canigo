@@ -95,7 +95,6 @@ node {
         stage ('Smoke Test INT') {
 
 
-            #!/usr/bin/env groovy
             def NEW_LINE = System.getProperty("line.separator")
             if (args.length < 1)
             {
