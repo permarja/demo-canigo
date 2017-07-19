@@ -93,6 +93,29 @@ node {
         
         // Inici Smoke TEST
         stage ('Smoke Test INT') {
+
+
+            #!/usr/bin/env groovy
+            def NEW_LINE = System.getProperty("line.separator")
+            if (args.length < 1)
+            {
+               println "Enter a URL as an argument."
+               System.exit(-1)
+            }
+            def address = "https://www.google.es"
+            def urlInfo = address.toURL()
+            println "URL: ${address}${NEW_LINE}"
+            println "Host/Port: ${urlInfo.host}/${urlInfo.port}${NEW_LINE}"
+            println "Protocol: ${urlInfo.protocol}${NEW_LINE}"
+
+            def connection = urlInfo.openConnection()
+            println "Connection Type: ${connection.class}"
+            println "Content Type: ${connection.contentType}"
+            println "Response Code/Message: ${connection.responseCode} / ${connection.responseMessage}"
+            println "Request Method: ${connection.requestMethod}"
+            println "Date: ${connection.date}"
+            println "Last-Modified: ${connection.lastModified}"
+            println "Content Length: ${connection.contentLength}"
         
         }
         // Fi Smoke TEST
