@@ -53,7 +53,7 @@ node {
         
         // Inici Unit TEST
         stage ('Unit Test') {
-            sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore"
+            sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore -f treball/pom.xml"
         }
         // Fi Unit TEST
         
