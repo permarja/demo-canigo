@@ -29,7 +29,8 @@ pipeline {
 
 	   stage('Selenium') {
 	    	steps {
-	    		sh "mvn test package"
+	    		sh "mvn test -Dtest=GoogleHomePageTest"
+				sh "mvn test -Dtest=GoogleHomeSecond"
 	    	}
 	    }
 
