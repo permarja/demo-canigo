@@ -10,7 +10,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class GoogleHomePageTest {
+public class SecondTest {
 
     private WebDriver driver;
     String appURL = "http://google.com";
