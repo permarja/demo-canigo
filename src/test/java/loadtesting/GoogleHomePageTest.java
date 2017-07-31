@@ -37,7 +37,7 @@ public class GoogleHomePageTest {
 
         driver.get("http://www.google.es");
         Assert.assertEquals(driver.getTitle(), "Google");
-		driver.get("tps://es.yahoo.com");
+		driver.get("https://es.yahoo.com");
         Assert.assertEquals(driver.getTitle(), "Yahoo");
     }
 
