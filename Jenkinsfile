@@ -29,9 +29,8 @@ pipeline {
 
 	   stage('Selenium') {
 	    	steps {
-	    		sh "mvn test -Dtest=GoogleHomePageTest"
-				sh "mvn test -Dtest=GoogleHomeSecond"
-	    	}
+	    		sh "mvn test -Dtest=GoogleHomePageTest,GoogleHomeSecond"
+			}
 	    }
 
 	    stage('Ciberseguretat: Fortify') {
