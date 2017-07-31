@@ -26,7 +26,7 @@ public class GoogleHomePageTest {
         
         driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), capability);
         
-        System.out.println("test");
+
     }
 
     @Test
