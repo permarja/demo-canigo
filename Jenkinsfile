@@ -23,16 +23,15 @@ pipeline {
 		}
         stage ('Build')  {
         	steps {
-	    		sh "mvn clean test package -Dmaven.test.failure.ignore=true"
+	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
 	   		}
 	    }
 
-	   // stage('Guardar Junits') {
-	   // 	steps {
-	   // 		archive '*/target/**/*'
-	   // 		junit '*/target/surefire-reports/*.xml'
-	   // 	}
-	    //}
+	   stage('Selenium') {
+	    	steps {
+	    		sh "mvn test package"
+	    	}
+	    }
 
 	    stage('Ciberseguretat: Fortify') {
 	    	//TODO: xxx
@@ -50,18 +49,5 @@ pipeline {
 
        
 	} 
-    post {
-		always {
-		   junit '**/target/*.xml' 
-		   deleteDir()
-		 }
-		 success {
-		 	echo "${MAIL_RECEIVER}"
-		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
-		 }
-		 failure {
-		 	echo "${MAIL_RECEIVER}"
-		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
-		 }
-   }
+   
 }
