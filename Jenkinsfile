@@ -1,200 +1,162 @@
-//S'ha de definir la tool Maven amb nom M3 i path que correspongui
+#!groovy​
+pipeline {
 
-def mvnHome
-env.TIPUS_DESPLEGAMENT
-env.WORKSPACE
-env.TITOL
-env.OBSERVACIONS
-env.BUILD_USER
-env.VERSIO
-def resultado
-def hashPropietats
-def repositoryPath = "https://github.com/permarja/demo-canigo.git"
+	agent any 
 
-node {
-    try{
-                    
-        env.TITOL = "Petició de desplegament"
-        env.OBSERVACIONS = "Observacions de petició de proves"
-        env.STAGE_NAME = "Settings inicials"
-        // Global definitions
-        // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
-       
-        mvnHome = tool 'M3'
+	tools {
+		maven 'Maven 3.5.0'
+	}
+	environment {
+		GIT_COMMITER_NAME = "GenCat Jenkins"
+		GIT_COMMITER_EMAIL = "jenkins@jenkins.id"
+		MAIL_RECEIVER = "oscar.perez_gov.ext@gencat.cat"
+	}
+	stages {
+		
+		stage('Inicialització') {
+			steps {
+				sh '''
+					echo "PATH = ${PATH}"
+					echo "M2_HOME = ${M2_HOME}"
+				   '''
+			}
+		}
+        stage ('Build')  {
+        	steps {
+	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
+	   		}
+	    }
 
-        
-        // Inici CHECKOUT
-        stage ('Checkout') {
-            //node {
-                // Global definitions
-              //  println("CODI: ${CODI_APLICACIO} , NOM: ${NOM_APLICACIO} , BUILD: ${env.BUILD_NUMBER}" )
-                // Load properties File.
-               // hashPropietats = readProperties file: "${env.APP_FILE_PROPERTIES}"
-            //}           
-            //env.WORKSPACE = pwd()
-            dir('treball')
-            {
-                git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
-            }
-                 
-                //env.VERSIO = deployUtilities.getVersio()
-                //deployUtilities.checkOutValidations(false)
-        }
-        // Fi CHECKOUT    
-        
-        // Inici BUILD
-        stage ('Build') {
-            sh "${mvnHome}/bin/mvn package -Dmaven.test.skip=true -f treball/pom.xml"
-            env.ENTORN = "INT"
-            //step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-            //step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-        }
-        // Fi BUILD
-        
-        // Inici Unit TEST
-        stage ('Unit Test') {
-            sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore -f treball/pom.xml"
-        }
-        // Fi Unit TEST
-        
-        // Inici ACE
+	   // stage('Guardar Junits') {
+	   // 	steps {
+	   // 		archive '*/target/**/*'
+	   // 		junit '*/target/surefire-reports/*.xml'
+	   // 	}
+	    //}
+
+	    stage('Ciberseguretat: Fortify') {
+	    	//TODO: xxx
+	    	steps {
+	    		echo "Ciberseguretat: Fortify"
+	    	}
+	    }
+
+	    stage('Ciberseguretat: ZAP') {
+	    	//TODO: xxx
+	    	steps {
+	    		echo "Ciberseguretat : ZAP"
+	    	}
+	    }
+
         stage ('Anàlisi de codi estàtic') {
-            // TODO: Integrar amb eina anàlisi statics
-             println("SonarQube aqui" )
+        	steps {
+	             // requires SonarQube Scanner 2.8+      	
+	    		withSonarQubeEnv('SonarQubeServer') {
+	    			//TODO: Figure out how to automatically generate values for projecteKey and sources for non maven projects
+	      			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
+	   			}
+   			}
         }
-        // Fi ACE
-        
-        // Inici Commit TEST
-        stage ('Commit Test') {          
-            //TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
-            println("Commit test aqui" )
+
+        stage("Validació de SonarQube Gatekeeper") {
+        	steps {
+        		script {
+        			timeout(time: 1, unit: 'HOURS') { 
+	        			def qG = waitForQualityGate()
+	        			if(qG.status != 'OK') {
+	        				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+	        			}
+	        		}
+        		}
+        	}
         }
-        // Fi Commit TEST
-        
-        // Inici Generació TAG BUILD
+
         stage ('Generació Tag BUILD') {
-            println("Generacio tag" )
-            //TODO: Enllestir aquesta part. Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-            
-        /*    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'MyID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-                sh("git tag -a some_tag -m 'Jenkins'")
-                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
-            } */
+            //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
+            steps {
+               script {
+	               def pom = readMavenPom file: 'pom.xml'
+		      	   //Si la versió es SNAPSHOT tirar-la enrera
+
+		           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+		                sh("git tag -a ${pom.version} -m 'Jenkins'")
+		                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
+		           } 
+		           echo "Generació del tag build"
+	         	}
+	         }
         }
-        // Fi Generació TAG BUILD
-        
-        
-        // Inici INT    
-        stage ('INT') {
-            println("-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------")
-            println("-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------")
+
+        stage ('Desplegament INT') {
+            steps {
+	            echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+	            echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+	        }
         }
-        // Fi INT
-        
-        // Inici Smoke TEST
         stage ('Smoke Test INT') {
-
-            URL url = new URL("http://google.com");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            println(connection.getResponseCode()) 
-    
-
+         	steps {
+         		echo "Smoke test int"
+         	}
         }
-        // Fi Smoke TEST
-          
-        // Inici PRE
-        stage ('PRE') {
-             println("-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------")
-            //def userInput = input(
-            //    id: 'userInput', message: 'Efectuar petició desplegament a PRE?', parameters: [
-            //  [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-            //    ])
-            //env.ENTORN = "PRE"
-            //env.TIPUS_DESPLEGAMENT = resultadoPre // -> AUT
-            
-            
-            //deployUtilities.sendArtifactsToCPDJob(hashPropietats)
-            //deployUtilities.sicPeticioDeplegament(hashPropietats)
-            //deployUtilities.deleteUploadFile()
-             println("-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------")
+        stage ('Desplegament PRE') {
+        	steps {
+       		 echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+             echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+        	}
         }
-        // Fi PRE
-        
-        // Inici Smoke TEST
         stage ('Smoke Test PRE') {
-            println("Smoke Test de PRE")
-         //   def userInput2 = input(
-          //      id: 'userInput2', message: 'Continuar quan es rebi confirmació de desplegament a PRE.', parameters: [
-                // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-         //   ])
+         	steps {
+        		echo "Smoke Test de PRE"
+            } 
         }
-        // Fi Smoke TEST
         
-        // Inici Acceptance TEST
         stage ('Acceptance Test PRE') {
-           println("Acceptance Test PRE")
+           steps {
+           	   echo "Acceptance Test PRE"
+           }
         }
-        // Fi Acceptancy TEST
-        
-        // Inici Exploratory TEST
+
         stage ('Exploratory Test PRE') {
-            println("Exploratory Test PRE")
+        	steps {
+        		echo "Exploratory Test PRE"
+        	}
         }
-        // Fi Exploratory TEST
         
-        
-         // Inici Generació TAG DEFINITIU
         stage ('Generació Tag DEFINITIU') {
-            println("Generació Tag DEFINITIU")
-            // try {
-            /* def userInput = input(
-            id: 'userInput', message: 'Generar TAG al Gitlab', parameters: [
-            ])*/
-
-            //   node {        
-            //       indicadorsFile.desaTempsGeneracioTag("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
-            //  }
-            //  } catch (Exception e) {
-            //      throw new hudson.AbortException("S'ha produït una excepció al STAGE TAG DEFINITIU \n " + e)
-            // }
-            }
-            // Fi Generació TAG DEFINITIU
-        
-        // Inici PRO
-        stage ('PRO') {
-            println("-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
-            //      def userInput = input(
-            //        id: 'userInput', message: 'Efectuar desplegament a PRO?', parameters: [
-            //                [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-            //        ])
-
-            //    env.ENTORN = "PRO"
-            //    env.TIPUS_DESPLEGAMENT = resultadoPre // -> AUT
-
-
-            //    deployUtilities.sendArtifactsToCPDJob(hashPropietats)
-            //   deployUtilities.sicPeticioDeplegament(hashPropietats)
-            //   deployUtilities.deleteUploadFile()
-            println("-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
+        	steps {
+        		echo "Generació Tag DEFINITIU"
+			}
+		}
+		
+		stage ('Desplegament PRO') {
+			steps {
+				echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+				echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+        	}
         }
-        // Fi PRO
-        
-        // Inici Smoke TEST
-        stage ('Smoke Test') {
-            def userInput3 = input(
-                id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
-                // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-            ])    
-        //  node {
-        //      indicadorsFile.desaTempsCicleFi("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
-        //  }
+	   
+    	 stage ('Smoke Test') {
+    	 	steps {
+    	 		echo "Per fer"
+    	 	}
+	//		def userInput3 = input(
+	//		    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
+	//		    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
+		  //])    
         }
-        // Fi Smoke TEST
-
-    } catch (Exception e) {
-        println("-----------------> EXCEPCION <-----------------")
-        error("S'ha produït una excepció al STAGE ${env.STAGE_NAME} \n " + e)
-        //currentBuild.result = 'FAILURE'
-        emailext subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - FAILURE!", to: "oscar.perez_gov.ext@gencat.cat",body: "${e.message}"
-    }
+	} 
+    post {
+		always {
+		   junit '**/target/*.xml' 
+		   deleteDir()
+		 }
+		 success {
+		 	echo "${MAIL_RECEIVER}"
+		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
+		 }
+		 failure {
+		 	echo "${MAIL_RECEIVER}"
+		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
+		 }
+   }
 }
