@@ -354,19 +354,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
-        <!-- reporting -->
-		<!-- To use the report goals in your POM or parent POM -->
-		  <reporting>
-			<plugins>
-			  <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.20</version>
-			  </plugin>
-			</plugins>
-		  </reporting>
-		
-		<!-- Selenium && TestNg-->
+        <!-- Selenium && TestNg-->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
@@ -648,4 +636,16 @@
             </properties>
         </profile>
     </profiles>
+	<!-- reporting -->
+		<!-- To use the report goals in your POM or parent POM -->
+		  <reporting>
+			<plugins>
+			  <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.20</version>
+			  </plugin>
+			</plugins>
+		  </reporting>
+		
 </project>
