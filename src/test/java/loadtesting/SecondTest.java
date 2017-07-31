@@ -31,12 +31,8 @@ public class SecondTest {
 
     @Test
     public void verifyGooglePageTittle() {
-        //driver.navigate().to(appURL);
-        //String getTitle = driver.getTitle();
-        //Assert.assertEquals(getTitle, "Google");
-
-        driver.get("http://www.marca.com");
-        Assert.assertEquals(driver.getTitle(), "Marca");
+        driver.get("http://www.google.com");
+        Assert.assertEquals(driver.getTitle(), "Google");
     }
 
     @AfterClass
