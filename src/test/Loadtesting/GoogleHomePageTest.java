@@ -1,4 +1,6 @@
-package loadtesting;
+package Loadtesting;
+
+
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,7 +10,10 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+@Listeners(loadtesting.ListenerTest.class)
 
 public class GoogleHomePageTest {
 
