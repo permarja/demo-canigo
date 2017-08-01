@@ -9,10 +9,10 @@
     </classes>
   </test>
   
-  <!--<test name="exampletest2">
+  <test name="exampletest2">
     <classes>
-       <class name="cat.gencat.springbootdemo.web.selenium.GoogleHomePageTest1" />
+       <class name="cat.gencat.springbootdemo.web.selenium.GoogleHomeSecond" />
     </classes>
-  </test>-->
+  </test>
     
 </suite>  
