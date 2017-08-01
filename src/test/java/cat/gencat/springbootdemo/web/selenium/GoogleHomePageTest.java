@@ -35,7 +35,7 @@ public class GoogleHomePageTest {
     }
 
     @Test
-    public void verifyGooglePageTittle() {
+    public void verifyFistTestExample() {
         //driver.navigate().to(appURL);
         //String getTitle = driver.getTitle();
         //Assert.assertEquals(getTitle, "Google");

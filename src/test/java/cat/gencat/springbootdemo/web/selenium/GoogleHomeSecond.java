@@ -34,7 +34,7 @@ public class GoogleHomeSecond {
     }
 
     @Test(description="Launches the google site")
-    public void verifyGooglePageTittle() {
+    public void verifySeconTestExample() {
         //driver.navigate().to(appURL);
         //String getTitle = driver.getTitle();
         //Assert.assertEquals(getTitle, "Google");
