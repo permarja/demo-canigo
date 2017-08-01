@@ -77,21 +77,21 @@ pipeline {
         //	}
         //}
 
-        stage ('Generació Tag BUILD') {
-            //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-            steps {
-               script {
-	               def pom = readMavenPom file: 'pom.xml'
-		      	   //Si la versió es SNAPSHOT tirar-la enrera
-
-		           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-		                sh("git tag -a ${pom.version} -m 'Jenkins'")
-		                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
-		           } 
-		           echo "Generació del tag build"
-	         	}
-	         }
-        }
+        //stage ('Generació Tag BUILD') {
+        //    //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
+        //    steps {
+        //       script {
+	    //           def pom = readMavenPom file: 'pom.xml'
+		//      	   //Si la versió es SNAPSHOT tirar-la enrera
+		//	
+		//           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+		//                sh("git tag -a ${pom.version} -m 'Jenkins'")
+		//                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
+		//           } 
+		//           echo "Generació del tag build"
+	    //     	}
+	    //     }
+        //}
 
         stage ('Desplegament INT') {
             steps {
@@ -151,18 +151,18 @@ pipeline {
 		  //])    
         }
 	} 
-    post {
-		always {
-		   junit '**/target/*.xml' 
-		   deleteDir()
-		 }
-		 success {
-		 	echo "${MAIL_RECEIVER}"
-		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
-		 }
-		 failure {
-		 	echo "${MAIL_RECEIVER}"
-		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
-		 }
-   }
+    //post {
+	//	always {
+	//	   junit '**/target/*.xml' 
+	//	   deleteDir()
+	//	 }
+	//	 success {
+	//	 	echo "${MAIL_RECEIVER}"
+	//	 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
+	//	 }
+	//	 failure {
+	//	 	echo "${MAIL_RECEIVER}"
+	//	 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
+	//	 }
+    //}
 }
