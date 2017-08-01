@@ -1,4 +1,4 @@
-package Loadtesting;
+package cat.gencat.springbootdemo.web.selenium;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

@@ -5,13 +5,13 @@
 
   <test name="exampletest1">
     <classes>
-       <class name="cat.gencat.springbootdemo.web.selenium.Loadtesting.GoogleHomePageTest" />
+       <class name="cat.gencat.springbootdemo.web.selenium.GoogleHomePageTest" />
     </classes>
   </test>
   
   <test name="exampletest2">
     <classes>
-       <class name="cat.gencat.springbootdemo.web.selenium.Loadtesting.GoogleHomePageTest1" />
+       <class name="cat.gencat.springbootdemo.web.selenium.GoogleHomePageTest1" />
     </classes>
   </test>
     

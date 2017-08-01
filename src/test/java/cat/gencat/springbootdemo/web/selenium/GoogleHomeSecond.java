@@ -1,4 +1,4 @@
-package Loadtesting;
+package cat.gencat.springbootdemo.web.selenium;
 
 
 
@@ -13,7 +13,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(cat.gencat.springbootdemo.web.selenium.Loadtesting.ListenerTest.class)
+@Listeners(cat.gencat.springbootdemo.web.selenium.ListenerTest.class)
 
 public class GoogleHomeSecond {
 
