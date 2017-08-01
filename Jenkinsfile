@@ -23,15 +23,15 @@ pipeline {
 		}
         stage ('Build')  {
         	steps {
-	    		//sh "mvn clean package -Dmaven.test.failure.ignore=true"
-				sh "mvn clean "
+	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
+				
 	    	}
 	    }
 
 	   stage('Selenium') {
 	    	steps {
-	    		//sh "mvn test -Dtest=GoogleHomePageTest,GoogleHomeSecond"
-				sh "mvn test"
+	    		sh "mvn test -Dtest=GoogleHomePageTest,GoogleHomeSecond"
+			
 			}
 	    }
 
@@ -52,11 +52,5 @@ pipeline {
        
 	}
 
-	post {
-        always {
-            archive "target/**/*"
-            junit 'target/surefire-reports/*.xml'
-        }
-    }
    
 }
