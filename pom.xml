@@ -437,7 +437,15 @@
                     <argLine>-XX:MaxPermSize=128m -Xmx256m ${surefireArgLine}</argLine>
                     <!-- Force alphabetical order to have a reproducible build -->
                     <runOrder>alphabetical</runOrder>
+					<!--suite TestNg -->
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/java/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
                 </configuration>
+				
+				<configuration>
+						  
+					   </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -629,6 +637,10 @@
                             </arguments>
                         </configuration>
                     </plugin>
+				
+
+			
+					<plugins>
                 </plugins>
             </build>
             <properties>
