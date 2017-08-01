@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="TestNG" verbose="1" parallel="false" thread-count="2"
+    data-provider-thread-count="3">
+
+  <test name="1336_Tests_With_Priority" parallel="classes" thread-count="10">
+    <classes>
+      <class name="Loadtesting.GoogleHomePageTest"/>
+      <class name="Loadtesting.GoogleHomeSecond"/>      
+    </classes>
+  </test>
+
+  </suite>
+
