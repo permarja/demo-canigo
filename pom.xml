@@ -442,10 +442,6 @@
 						<suiteXmlFile>src/test/java/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
                 </configuration>
-				
-				<configuration>
-						  
-					   </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -637,10 +633,6 @@
                             </arguments>
                         </configuration>
                     </plugin>
-				
-
-			
-					<plugins>
                 </plugins>
             </build>
             <properties>
