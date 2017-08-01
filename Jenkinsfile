@@ -32,7 +32,7 @@ pipeline {
 	   // 		archive '*/target/**/*'
 	   // 		junit '*/target/surefire-reports/*.xml'
 	   // 	}
-	    //}
+	   //}
 
 	    stage('Ciberseguretat: Fortify') {
 	    	//TODO: xxx
@@ -48,28 +48,28 @@ pipeline {
 	    	}
 	    }
 
-        stage ('Anàlisi de codi estàtic') {
-        	steps {
-	             // requires SonarQube Scanner 2.8+      	
-	    		withSonarQubeEnv('SonarQubeServer') {
-	    			//TODO: Figure out how to automatically generate values for projecteKey and sources for non maven projects
-	      			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
-	   			}
-   			}
-        }
+        //stage ('Anàlisi de codi estàtic') {
+        //	steps {
+	    //         // requires SonarQube Scanner 2.8+      	
+	    //		withSonarQubeEnv('SonarQubeServer') {
+	    //			//TODO: Figure out how to automatically generate values for projecteKey and sources for non maven projects
+	    //  			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
+	   	//		}
+   		//	}
+        //}
 
-        stage("Validació de SonarQube Gatekeeper") {
-        	steps {
-        		script {
-        			timeout(time: 1, unit: 'HOURS') { 
-	        			def qG = waitForQualityGate()
-	        			if(qG.status != 'OK') {
-	        				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
-	        			}
-	        		}
-        		}
-        	}
-        }
+        //stage("Validació de SonarQube Gatekeeper") {
+        //	steps {
+        //		script {
+        //			timeout(time: 1, unit: 'HOURS') { 
+	    //    			def qG = waitForQualityGate()
+	    //    			if(qG.status != 'OK') {
+	    //    				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+	    //    			}
+	    //    		}
+        //		}
+        //	}
+        //}
 
         stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
