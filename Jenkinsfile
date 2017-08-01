@@ -29,7 +29,7 @@ pipeline {
 		
 		stage ('Test')  {
         	steps {
-	    		sh "mvn test"
+	    		sh "mvn test -Dtest=GoogleHomePageTest,GoogleHomeSecond"
 	   		}
 	    }
 

@@ -33,7 +33,7 @@ public class GoogleHomeSecond {
 
     }
 
-    @Test
+    @Test(description="Launches the google site")
     public void verifyGooglePageTittle() {
         //driver.navigate().to(appURL);
         //String getTitle = driver.getTitle();
