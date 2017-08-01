@@ -64,8 +64,8 @@
         <sonar.surefire.reportsPath>${project.testresult.directory}/surefire-reports</sonar.surefire.reportsPath>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
 		
-		<selenium.version>2.53.1</selenium.version>
-		<testng.version>6.9.10</testng.version>
+        <selenium.version>2.53.1</selenium.version>
+        <testng.version>6.9.10</testng.version>
 
     </properties>
 
@@ -200,12 +200,12 @@
             </exclusions>
         </dependency>
         <!-- The HikariCP Java Agent is disabled by default, as it is experimental
-          <dependency>
-              <groupId>com.zaxxer</groupId>
-                  <artifactId>HikariCP-agent</artifactId>
-                      <version>${HikariCP.version}</version>
-                      </dependency>
-                  -->
+<dependency>
+    <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP-agent</artifactId>
+            <version>${HikariCP.version}</version>
+            </dependency>
+        -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -245,7 +245,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
-        <!--      <version>${hibernate.version}</version> -->
+            <!--      <version>${hibernate.version}</version> -->
             <exclusions>
                 <exclusion>
                     <groupId>net.sf.ehcache</groupId>
@@ -355,16 +355,16 @@
             <artifactId>spring-security-data</artifactId>
         </dependency>
         <!-- Selenium && TestNg-->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>${selenium.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${testng.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
@@ -417,7 +417,7 @@
                     <bodiesFolder>src/test/gatling/bodies</bodiesFolder>
                     <simulationsFolder>src/test/gatling/simulations</simulationsFolder>
                     <!-- This will force Gatling to ask which simulation to run
-                      This is useful when you have multiple simulations -->
+                    This is useful when you have multiple simulations -->
                     <simulationClass>*</simulationClass>
                 </configuration>
             </plugin>
@@ -524,6 +524,28 @@
                         <argument>--spring.profiles.active=dev</argument>
                     </arguments>
                 </configuration>
+            </plugin>
+            
+            <!-- enforce version -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.0</version>
+                                </requireMavenVersion>
+                            </rules>    
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -636,7 +658,7 @@
             </properties>
         </profile>
     </profiles>
-	<!-- reporting -->
+    <!-- reporting -->
 		
 		
 </project>
