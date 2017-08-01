@@ -13,7 +13,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-@Listeners(loadtesting.ListenerTest.class)
+@Listeners(cat.gencat.springbootdemo.web.selenium.Loadtesting.ListenerTest.class)
 
 public class GoogleHomeSecond {
 
