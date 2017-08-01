@@ -26,6 +26,12 @@ pipeline {
 	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
 	   		}
 	    }
+		
+		stage ('Test')  {
+        	steps {
+	    		sh "mvn test"
+	   		}
+	    }
 
 	   // stage('Guardar Junits') {
 	   // 	steps {
