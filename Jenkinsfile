@@ -4,7 +4,7 @@ pipeline {
 	agent any 
 
 	tools {
-		maven 'Maven 3.5.3'
+		maven 'Maven 3.5.4'
 	}
 	environment {
 		GIT_COMMITER_NAME = "GenCat Jenkins"
